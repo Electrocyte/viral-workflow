@@ -1,0 +1,227 @@
+/home/mangifera/viral-workflow/ADVTIG-untargeted/counter_screen.py:812: SyntaxWarning: invalid escape sequence '\{'
+  print(f"\{panel} panel summarisation complete.")
+<unknown>:812: SyntaxWarning: invalid escape sequence '\{'
+<unknown>:812: SyntaxWarning: invalid escape sequence '\{'
+
+## 1. Syntax (py_compile)
+
+OK    ADVTIG-untargeted/collect_taxid_primary_counts.py
+OK    ADVTIG-untargeted/count_the_screen.py
+OK    ADVTIG-untargeted/counter_screen.py
+OK    ADVTIG-untargeted/deep_cov.py
+OK    ADVTIG-untargeted/filt_low_complexity.py
+OK    ADVTIG-untargeted/run_coverage.py
+OK    ADVTIG-untargeted/split_fa.py
+OK    ADVTIG-untargeted/summarise_urvdb.py
+OK    map_genome_to_reads.py
+OK    mp_metagenomic_assessment_v4.py
+OK    pipeline/Convert_U2T_fastq.py
+OK    pipeline/__init__.py
+OK    pipeline/bespoke_parse_map_reads.py
+OK    pipeline/cat_nanostats.py
+OK    pipeline/database_config.py
+OK    pipeline/dep_flat_sample_classifier_test.py
+OK    pipeline/dep_pre_chunker.py
+OK    pipeline/dep_run_nanostat_analyses.py
+OK    pipeline/find_barcode_reads_for_QC.py
+OK    pipeline/guppy_demux.py
+OK    pipeline/map_genome_to_reads.py
+OK    pipeline/mp_cent_interpreter_v3.py
+OK    pipeline/mp_comb_ce_BN_v3.py
+OK    pipeline/mp_demux_reads.py
+OK    pipeline/mp_host_remove.py
+OK    pipeline/mp_trim_reads_v2.py
+OK    pipeline/pre_trim_fq.py
+OK    pipeline/rank_BLAST_predictions_for_aa_v2.py
+OK    pipeline/rank_centrifuge_predictions_for_aa_v2.py
+OK    pipeline/sample_name_sanity_check.py
+OK    pipeline/updated_blastn_interpreter_v2.py
+OK    q_control/adjust_q_scores.py
+OK    q_control/filter_q.py
+
+## 2. Import resolution (script directory on sys.path, as when run directly)
+
+OK    ADVTIG-untargeted/deep_cov.py: import run_coverage -> ADVTIG-untargeted/run_coverage.py
+MISS  map_genome_to_reads.py: import bespoke_parse_map_reads -- no bespoke_parse_map_reads.py or bespoke_parse_map_reads/ in repo
+MISS  map_genome_to_reads.py: import pre_trim_fq -- no pre_trim_fq.py or pre_trim_fq/ in repo
+OK    mp_metagenomic_assessment_v4.py: from pipeline import Convert_U2T_fastq -> pipeline/Convert_U2T_fastq.py
+OK    mp_metagenomic_assessment_v4.py: from pipeline import mp_host_remove -> pipeline/mp_host_remove.py
+OK    mp_metagenomic_assessment_v4.py: from pipeline import mp_trim_reads_v2 -> pipeline/mp_trim_reads_v2.py
+OK    mp_metagenomic_assessment_v4.py: from pipeline import mp_demux_reads -> pipeline/mp_demux_reads.py
+OK    mp_metagenomic_assessment_v4.py: from pipeline import database_config -> pipeline/database_config.py
+OK    mp_metagenomic_assessment_v4.py: from pipeline import rank_centrifuge_predictions_for_aa_v2 -> pipeline/rank_centrifuge_predictions_for_aa_v2.py
+OK    mp_metagenomic_assessment_v4.py: from pipeline import sample_name_sanity_check -> pipeline/sample_name_sanity_check.py
+OK    mp_metagenomic_assessment_v4.py: from pipeline import dep_flat_sample_classifier_test -> pipeline/dep_flat_sample_classifier_test.py
+OK    mp_metagenomic_assessment_v4.py: from pipeline import mp_comb_ce_BN_v3 -> pipeline/mp_comb_ce_BN_v3.py
+OK    mp_metagenomic_assessment_v4.py: from pipeline import mp_cent_interpreter_v3 -> pipeline/mp_cent_interpreter_v3.py
+OK    mp_metagenomic_assessment_v4.py: from pipeline import dep_run_nanostat_analyses -> pipeline/dep_run_nanostat_analyses.py
+OK    mp_metagenomic_assessment_v4.py: from pipeline import guppy_demux -> pipeline/guppy_demux.py
+OK    mp_metagenomic_assessment_v4.py: from q_control import adjust_q_scores -> q_control/adjust_q_scores.py
+OK    mp_metagenomic_assessment_v4.py: from q_control import filter_q -> q_control/filter_q.py
+MISS  pipeline/dep_flat_sample_classifier_test.py: import pipeline (database_config, updated_blastn_interpreter_v2) -- no pipeline/pipeline.py or pipeline/pipeline/ in repo
+MISS  pipeline/dep_run_nanostat_analyses.py: import pipeline (cat_nanostats, find_barcode_reads_for_QC) -- no pipeline/pipeline.py or pipeline/pipeline/ in repo
+OK    pipeline/map_genome_to_reads.py: import bespoke_parse_map_reads -> pipeline/bespoke_parse_map_reads.py
+OK    pipeline/map_genome_to_reads.py: import pre_trim_fq -> pipeline/pre_trim_fq.py
+MISS  pipeline/mp_comb_ce_BN_v3.py: import pipeline (rank_BLAST_predictions_for_aa_v2) -- no pipeline/pipeline.py or pipeline/pipeline/ in repo
+MISS  pipeline/mp_demux_reads.py: import pipeline (dep_pre_chunker) -- no pipeline/pipeline.py or pipeline/pipeline/ in repo
+MISS  pipeline/mp_trim_reads_v2.py: import pipeline (dep_pre_chunker) -- no pipeline/pipeline.py or pipeline/pipeline/ in repo
+
+Third-party packages required:
+  Bio: ADVTIG-untargeted/run_coverage.py
+  numpy: ADVTIG-untargeted/deep_cov.py, ADVTIG-untargeted/filt_low_complexity.py, ADVTIG-untargeted/run_coverage.py, mp_metagenomic_assessment_v4.py, pipeline/mp_comb_ce_BN_v3.py
+  pandas: ADVTIG-untargeted/collect_taxid_primary_counts.py, ADVTIG-untargeted/count_the_screen.py, ADVTIG-untargeted/counter_screen.py, ADVTIG-untargeted/deep_cov.py, ADVTIG-untargeted/filt_low_complexity.py, ADVTIG-untargeted/run_coverage.py, ADVTIG-untargeted/split_fa.py, ADVTIG-untargeted/summarise_urvdb.py, map_genome_to_reads.py, mp_metagenomic_assessment_v4.py, pipeline/bespoke_parse_map_reads.py, pipeline/cat_nanostats.py, pipeline/dep_flat_sample_classifier_test.py, pipeline/dep_run_nanostat_analyses.py, pipeline/find_barcode_reads_for_QC.py, pipeline/map_genome_to_reads.py, pipeline/mp_cent_interpreter_v3.py, pipeline/mp_comb_ce_BN_v3.py, pipeline/mp_host_remove.py, pipeline/rank_BLAST_predictions_for_aa_v2.py, pipeline/rank_centrifuge_predictions_for_aa_v2.py, pipeline/updated_blastn_interpreter_v2.py, q_control/adjust_q_scores.py
+  pysam: ADVTIG-untargeted/filt_low_complexity.py, ADVTIG-untargeted/run_coverage.py
+
+Environment definition files present in repo: ['Pipfile', 'Pipfile.lock']
+
+## 3. argparse construction (rebuilt in isolation from the script source)
+
+OK    ADVTIG-untargeted/run_coverage.py: parser constructed
+OK    ADVTIG-untargeted/deep_cov.py: parser constructed
+OK    ADVTIG-untargeted/filt_low_complexity.py: parser constructed
+OK    ADVTIG-untargeted/counter_screen.py: parser constructed
+OK    ADVTIG-untargeted/count_the_screen.py: parser constructed
+OK    mp_metagenomic_assessment_v4.py: parser constructed
+OK    map_genome_to_reads.py: parser constructed
+NOTE  collect_taxid_primary_counts.py, split_fa.py, summarise_urvdb.py have no CLI (hard-coded module-level code).
+
+## 4. Documented command lines parsed against the parsers (no execution)
+
+### ADVTIG-protocol.md  (shell variables substituted from the run-book's own preceding assignments)
+OK    L3    [CURRENT] split_fa.py  | path OK | no CLI
+OK    L15   [CURRENT] mp_metagenomic_assessment_v4.py -d /mnt/usersData/ADVTIG_v2_untargeted/ -t 5 -ci ~/SequencingData/Centrifuge_libraries/vir | external path (~/SMART-CAMP/mp_metagenomic_assessment_v4.py)
+OK    L24   [CURRENT] mp_metagenomic_assessment_v4.py -d /mnt/usersData/ADVTIG_v2_untargeted/ -t 5 -ci ~/SequencingData/Centrifuge_libraries/vir | external path (~/SMART-CAMP/mp_metagenomic_assessment_v4.py)
+HFAIL L39   [HISTORICAL] [commented] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.txt -d /mnt/usersData/ADVTIG_v2_untarge | path OK | static_validation.py: error: argument -e/--edit-distance-threshold: expected one argument
+HFAIL L40   [HISTORICAL] [commented] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.txt -d /mnt/usersData/ADVTIG_v2_untarge | path OK | static_validation.py: error: unrecognized arguments: -c 2
+HFAIL L41   [HISTORICAL] [commented] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.txt -d /mnt/usersData/ADVTIG_v2_untarge | path OK | static_validation.py: error: unrecognized arguments: -c 2
+HFAIL L42   [HISTORICAL] [commented] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.txt -d /mnt/usersData/ADVTIG_v2_untarge | path OK | static_validation.py: error: unrecognized arguments: -c 2
+OK    L44   [CURRENT] map_genome_to_reads.py -d /mnt/usersData/Viral_FDA/ -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.txt -t la | path OK
+OK    L45   [CURRENT] map_genome_to_reads.py -d /mnt/usersData/ADVTIG_v2_untargeted/ -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2 | path OK
+OK    L59   [CURRENT] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v2_untarge | path OK
+OK    L60   [CURRENT] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v2_untarge | path OK
+OK    L61   [CURRENT] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v2_untarge | path OK
+OK    L62   [CURRENT] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v2_untarge | path OK
+OK    L68   [CURRENT] deep_cov.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v3_untarge | path OK
+OK    L69   [CURRENT] deep_cov.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v3_untarge | path OK
+OK    L70   [CURRENT] deep_cov.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v3_untarge | path OK
+OK    L72   [CURRENT] filt_low_complexity.py -o /mnt/usersData/ADVTIG_v3_untargeted/ | path OK
+OK    L75   [CURRENT] counter_screen.py -o /mnt/usersData/ADVTIG_v3_untargeted/ -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2 | path OK
+OK    L76   [CURRENT] counter_screen.py -o /mnt/usersData/ADVTIG_v3_untargeted/ -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2 | path OK
+OK    L78   [CURRENT] counter_screen.py -o /mnt/usersData/ADVTIG_v3_untargeted/ -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2 | path OK
+OK    L79   [CURRENT] counter_screen.py -o /mnt/usersData/ADVTIG_v3_untargeted/ -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2 | path OK
+OK    L80   [CURRENT] counter_screen.py -o /mnt/usersData/ADVTIG_v3_untargeted/ -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2 | path OK
+OK    L81   [CURRENT] counter_screen.py -o /mnt/usersData/ADVTIG_v3_untargeted/ -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2 | path OK
+OK    L83   [CURRENT] count_the_screen.py -o /mnt/usersData/ADVTIG_v3_untargeted/ -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2 | path OK
+OK    L84   [CURRENT] count_the_screen.py -o /mnt/usersData/ADVTIG_v3_untargeted/ -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2 | path OK
+OK    L87   [CURRENT] collect_taxid_primary_counts.py  | path OK | no CLI
+OK    L88   [CURRENT] collect_taxid_primary_counts.py  | path OK | no CLI
+OK    L89   [CURRENT] collect_taxid_primary_counts.py  | path OK | no CLI
+HFAIL L91   [HISTORICAL] [commented] deep_cov.py  | path OK | static_validation.py: error: the following arguments are required: -d/--directory, -o/--save-dir, -s/--sample-config, -db/--database
+OK    L102  [CURRENT] mp_metagenomic_assessment_v4.py -d /mnt/usersData/Viral_FDA/ -t 5 -ci ~/SequencingData/Centrifuge_libraries/viral/ -c -bl  | external path (~/SMART-CAMP/mp_metagenomic_assessment_v4.py)
+OK    L106  [CURRENT] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -d /mnt/usersData/Viral_FDA/ -o /m | path OK
+OK    L107  [CURRENT] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -d /mnt/usersData/Viral_FDA/ -o /m | path OK
+OK    L108  [CURRENT] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -d /mnt/usersData/Viral_FDA/ -o /m | path OK
+OK    L109  [CURRENT] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -d /mnt/usersData/Viral_FDA/ -o /m | path OK
+OK    L115  [CURRENT] deep_cov.py -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -d /mnt/usersData/Viral_FDA/ -o /m | path OK
+OK    L116  [CURRENT] deep_cov.py -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -d /mnt/usersData/Viral_FDA/ -o /m | path OK
+OK    L117  [CURRENT] deep_cov.py -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -d /mnt/usersData/Viral_FDA/ -o /m | path OK
+HFAIL L119  [HISTORICAL] [commented] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -d /mnt/usersData/Viral_FDA/ -o /m | path OK | static_validation.py: error: argument -e/--edit-distance-threshold: expected one argument
+OK    L120  [HISTORICAL] [commented] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -d /mnt/usersData/Viral_FDA/ -o /m | path OK
+OK    L121  [HISTORICAL] [commented] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -d /mnt/usersData/Viral_FDA/ -o /m | path OK
+OK    L122  [HISTORICAL] [commented] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -d /mnt/usersData/Viral_FDA/ -o /m | path OK
+OK    L125  [HISTORICAL] [commented] deep_cov.py -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -d /mnt/usersData/Viral_FDA/ -o /m | path OK
+HFAIL L126  [HISTORICAL] [commented] deep_cov.py -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -d /mnt/usersData/Viral_FDA/ -o /m | path OK | static_validation.py: error: argument -e/--edit-distance-threshold: expected one argument
+OK    L127  [HISTORICAL] [commented] deep_cov.py -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -d /mnt/usersData/Viral_FDA/ -o /m | path OK
+OK    L129  [CURRENT] filt_low_complexity.py -o /mnt/usersData/Viral_FDA/ | path OK
+OK    L131  [CURRENT] counter_screen.py -o /mnt/usersData/Viral_FDA/ -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -p 15 | path OK
+OK    L132  [CURRENT] counter_screen.py -o /mnt/usersData/Viral_FDA/ -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -p 15 | path OK
+OK    L133  [CURRENT] counter_screen.py -o /mnt/usersData/Viral_FDA/ -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -p 15 | path OK
+OK    L134  [CURRENT] counter_screen.py -o /mnt/usersData/Viral_FDA/ -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -p 15 | path OK
+OK    L136  [CURRENT] counter_screen.py -o /mnt/usersData/Viral_FDA/ -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -p 15 | path OK
+OK    L137  [CURRENT] counter_screen.py -o /mnt/usersData/Viral_FDA/ -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -p 15 | path OK
+OK    L139  [CURRENT] count_the_screen.py -o /mnt/usersData/Viral_FDA/ -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -e 0. | path OK
+OK    L140  [CURRENT] count_the_screen.py -o /mnt/usersData/Viral_FDA/ -s /home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv -e 0. | path OK
+### ADVTIG-untargeted/URVDB.md  (shell variables substituted from the run-book's own preceding assignments)
+OK    L173  [HISTORICAL] split_fa.py  | path OK | no CLI
+OK    L228  [HISTORICAL] split_fa.py  | path OK | no CLI
+OK    L236  [HISTORICAL] mp_metagenomic_assessment_v4.py -d /mnt/usersData/ADVTIG/ -t 5 -ci ~/SequencingData/Centrifuge_libraries/viral/ -c -bl c-v | external path (~/SMART-CAMP/mp_metagenomic_assessment_v4.py)
+HFAIL L251  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG/ -o /mnt/u | path OK | static_validation.py: error: argument -e/--edit-distance-threshold: expected one argument
+OK    L252  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG/ -o /mnt/u | path OK
+OK    L253  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG/ -o /mnt/u | path OK
+OK    L254  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG/ -o /mnt/u | path OK
+HFAIL L260  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG/ -o /mnt/u | path OK | static_validation.py: error: argument -e/--edit-distance-threshold: expected one argument
+OK    L261  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG/ -o /mnt/u | path OK
+OK    L263  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2-4.csv -d /mnt/usersData/ADVTIG/ -o /mnt | path OK
+OK    L265  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2-5.csv -d /mnt/usersData/ADVTIG/ -o /mnt | path OK
+OK    L267  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2-6.csv -d /mnt/usersData/ADVTIG/ -o /mnt | path OK
+OK    L268  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2-6.csv -d /mnt/usersData/ADVTIG/ -o /mnt | path OK
+OK    L275  [HISTORICAL] split_fa.py  | path OK | no CLI
+OK    L287  [HISTORICAL] mp_metagenomic_assessment_v4.py -d /mnt/usersData/ADVTIG_v2_untargeted/ -t 5 -ci ~/SequencingData/Centrifuge_libraries/vir | external path (~/SMART-CAMP/mp_metagenomic_assessment_v4.py)
+OK    L296  [HISTORICAL] mp_metagenomic_assessment_v4.py -d /mnt/usersData/ADVTIG_v2_untargeted/ -t 5 -ci ~/SequencingData/Centrifuge_libraries/vir | external path (~/SMART-CAMP/mp_metagenomic_assessment_v4.py)
+HFAIL L311  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v2_untarge | path OK | static_validation.py: error: argument -e/--edit-distance-threshold: expected one argument
+HFAIL L312  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v2_untarge | path OK | static_validation.py: error: unrecognized arguments: -c 2
+HFAIL L313  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v2_untarge | path OK | static_validation.py: error: unrecognized arguments: -c 2
+HFAIL L314  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v2_untarge | path OK | static_validation.py: error: unrecognized arguments: -c 2
+HFAIL L320  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v2_untarge | path OK | static_validation.py: error: argument -e/--edit-distance-threshold: expected one argument
+OK    L321  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v2_untarge | path OK
+OK    L322  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v2_untarge | path OK
+OK    L323  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v2_untarge | path OK
+OK    L325  [HISTORICAL] deep_cov.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v2_untarge | path OK
+HFAIL L326  [HISTORICAL] deep_cov.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v2_untarge | path OK | static_validation.py: error: argument -e/--edit-distance-threshold: expected one argument
+OK    L327  [HISTORICAL] deep_cov.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG_v2_untarge | path OK
+OK    L329  [HISTORICAL] filt_low_complexity.py -o /mnt/usersData/ADVTIG_v2_untargeted/ | path OK
+OK    L333  [HISTORICAL] summarise_urvdb.py  | path OK | no CLI
+HFAIL L361  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG/ -o /mnt/u | path OK | static_validation.py: error: argument -e/--edit-distance-threshold: expected one argument
+HFAIL L362  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG/ -o /mnt/u | path OK | static_validation.py: error: the following arguments are required: -db/--database
+HFAIL L363  [HISTORICAL] run_coverage.py -s /home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv -d /mnt/usersData/ADVTIG/ -o /mnt/u | path OK | static_validation.py: error: the following arguments are required: -db/--database
+
+SUMMARY §4: CURRENT commands: 41 OK, 0 FAIL; HISTORICAL commands: 26 parse under current CLI, 18 HFAIL (intentionally not valid under the current CLI)
+
+## 5. bash -n on run-book code fences
+
+OK    ADVTIG-protocol.md block 0: syntax OK
+FAIL  ADVTIG-untargeted/URVDB.md block 0: bash: line 335: syntax error near unexpected token `|'
+bash: line 335: `| **U-RVDB Version** | **Sequence Count (`>` headers)** |'
+
+## 6. Cross-stage file-name dependencies
+
+  ADVTIG-untargeted/collect_taxid_primary_counts.py:91:    FILTER_CSV = "/mnt/usersData/ADVTIG_v3_untargeted/MetaFilt-Fifth-Pass.csv"
+  ADVTIG-untargeted/collect_taxid_primary_counts.py:179:        FILTER_CSV = "/mnt/usersData/ADVTIG_v3_untargeted/MetaFilt-Fifth-Pass.csv"
+  ADVTIG-untargeted/collect_taxid_primary_counts.py:182:        filt_OUT_CSV = "/mnt/usersData/ADVTIG_v3_untargeted/Deduplicated-Read-Counts-MetaFilt-Fourth-Pass-FILTERED.csv"
+  ADVTIG-untargeted/count_the_screen.py:564:            out_save_merge = f"{out_dir}/MetaFilt-Fifth-Pass.csv"
+  ADVTIG-untargeted/count_the_screen.py:587:            save_viral_subset = f"{out_dir}/MetaFilt-Fifth-Pass-VIRAL-ONLY.csv"
+  ADVTIG-untargeted/count_the_screen.py:595:            save_bacterial_subset = f"{out_dir}/MetaFilt-Fifth-Pass-BACTERIAL-ONLY.csv"
+
+stage 6 writes: ['MetaFilt-Fifth-Pass.csv']; stage 7 reads: ['MetaFilt-Fifth-Pass.csv']
+OK    stage 6 output filename matches stage 7 input filename
+
+## 7. Supporting material present in repo
+
+sample sheets / configs: ['USABILITY_BLOCKERS.tsv', 'CONFIGURATION-FILE-INPUTS.txt', 'configs/viral_DNA_all9-2-6.csv', 'configs/viral_DNA_all9-2.csv', 'configs/viral_DNA_all9-2-5.txt', 'configs/viral_DNA_all9-2-6.txt', 'configs/viral_DNA_all16-2.csv', 'configs/viral_DNA_all16-2.txt', 'configs/viral_DNA_all9-2-4.csv', 'configs/viral_DNA_all9-2-5.csv', 'configs/viral_DNA_all9-2.txt', 'configs/viral_DNA_all9-2-1.csv']
+pipeline: present
+q_control: present
+configs: present
+docs: ABSENT
+tests: ABSENT
+envs: ABSENT
+references: ABSENT
+Makefile: ABSENT
+Snakefile: ABSENT
+README.md bytes: 16
+
+## 8. Targeted checks for B3 (run_coverage.py CLI) and B4 (stage 6 -> 7 file name)
+
+OK    run_coverage.py parser constructs (rebuilt from parse_arguments source)
+OK    run_coverage.py help text generates -- help lists -x/--extract-fastq and -e EDIT_DISTANCE_THRESHOLD
+OK    default edit-distance threshold unchanged (0.1)
+OK    '-e 0.15' accepted as ED threshold
+OK    '-x' accepted as extract-FASTQ mode
+OK    long form '--extract-fastq' unchanged
+OK    '-e 0.15 -x' coexist
+OK    '-x -e 0.15' coexist
+OK    '-e 0.15 -r' parses
+OK    '-e 0.15 -l' parses
+OK    '-e 0.15 -a -x' parses
+OK    historical bare '-e' (old extract form) is rejected, as expected under the current CLI
+OK    real `run_coverage.py --help` exits 0 without argparse exception (third-party imports stubbed) -- rc=0
+OK    B4: stage 6 output filename equals stage 7 input filename -- stage 6 ['MetaFilt-Fifth-Pass.csv'] / stage 7 ['MetaFilt-Fifth-Pass.csv']

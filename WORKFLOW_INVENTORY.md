@@ -1,7 +1,7 @@
 # Workflow Inventory — `viral-workflow` (ADVTIG untargeted viral screen)
 
-- **Revision:** 3 (2026-10-01). This revision replaces revisions 1 and 2. It incorporates the code-provenance, reference, Fourth-Pass and sequencing-input investigations.
-- **Companion files:** `WORKFLOW_INVENTORY.tsv` (per-file inventory) and `WORKFLOW_MISSING_DEPENDENCIES.tsv` (dependency completeness audit).
+- **Revision:** 7 (2026-10-02). Revision 7 adds §24, the current `run_coverage.py` CLI decision (`--edit-distance`, default 0.15; `-x` for extraction; no `-e`). Revision 6 added §23, the B3/B4 code corrections (`run_coverage.py` CLI; stage 6→7 file name) and their validation. Revision 5 added §22, the repository packaging pass: the workflow's pipeline/, q_control/, configs/ and Pipfile files were copied in from SMART-CAMP and their imports re-verified. Earlier revisions: revision 3 incorporated the code-provenance, reference, Fourth-Pass and sequencing-input investigations; revision 4 (2026-10-01) added §21, Current Usability Verification (static checks in `audit/`).
+- **Companion files:** `WORKFLOW_INVENTORY.tsv` (per-file inventory, with per-file provenance columns since revision 5), `WORKFLOW_MISSING_DEPENDENCIES.tsv` (dependency completeness audit) and `USABILITY_BLOCKERS.tsv` (blockers, with status since revision 5).
 
 **Method.** Everything here was gathered read-only. Nothing in the workflow was executed, built, decompressed to disk or modified. The sources examined:
 - the repo copy at `/home/mangifera/viral-workflow`;
@@ -36,27 +36,32 @@
 
 ---
 
-## 2. Repository structure (current state, re-verified)
+## 2. Repository structure (current state, re-verified 2026-10-02)
 
 ```
-viral-workflow/                          git: branch main, 1 commit (README only); all else untracked
+viral-workflow/                          git: branch workflow-audit; packaging-pass files uncommitted
 ├── README.md                            16 B   title only
-├── ADVTIG-protocol.md                   24.3 KB run-book (= SMART-CAMP HEAD)
-├── mp_metagenomic_assessment_v4.py      33.5 KB NEW — stage 1 (= SMART-CAMP, md5 83e36075…)
-├── map_genome_to_reads.py               39.3 KB NEW — lambda side-branch (= SMART-CAMP pipeline/…, md5 ce4a1882…)
-│                                         ⚠ placed at repo ROOT; protocol calls ./pipeline/map_genome_to_reads.py
-├── ADVTIG-untargeted/                   9 files, unchanged (= SMART-CAMP HEAD)
-├── WORKFLOW_INVENTORY.md / .tsv, WORKFLOW_MISSING_DEPENDENCIES.tsv   (these reports)
+├── ADVTIG-protocol.md                   24.9 KB run-book (= SMART-CAMP HEAD + B3 annotations; L59/L106 now '-e 0.15 -x'; §23)
+├── mp_metagenomic_assessment_v4.py      33.5 KB stage 1 (= SMART-CAMP, md5 83e36075…)
+├── map_genome_to_reads.py               39.3 KB ⚠ MISPLACED DUPLICATE of pipeline/map_genome_to_reads.py (retained; see §22.6)
+├── pipeline/                            21 files copied 2026-10-02 (__init__.py + stage-1 closure + map_genome_to_reads.py and its 2 helpers)
+├── q_control/                           2 files copied 2026-10-02 (namespace package, no __init__.py, as in source)
+├── configs/                             10 sample sheets copied 2026-10-02 (ADVTIG viral_DNA_all9-2*, Viral_FDA viral_DNA_all16-2*)
+├── CONFIGURATION-FILE-INPUTS.txt        7.4 KB sample-sheet schema (copied 2026-10-02)
+├── Pipfile, Pipfile.lock                historical SMART-CAMP environment metadata (copied 2026-10-02, unchanged, incomplete)
+├── ADVTIG-untargeted/                   9 files (= SMART-CAMP HEAD except run_coverage.py [B3], collect_taxid_primary_counts.py [B4], URVDB.md [historical note]; §23)
+├── audit/                               static checks and their results
+├── WORKFLOW_INVENTORY.md / .tsv, WORKFLOW_MISSING_DEPENDENCIES.tsv, USABILITY_BLOCKERS.tsv   (these reports)
 └── .git/
 ```
 
-**[Obs]** Missing from the copy, though present in SMART-CAMP:
+**[Obs] (revision 4, now superseded by §22).** Missing from the copy, though present in SMART-CAMP:
 - `pipeline/` (`__init__.py` plus 12 imported modules and their second-level imports `dep_pre_chunker`, `updated_blastn_interpreter_v2`, `rank_BLAST_predictions_for_aa_v2`, `cat_nanostats`, `find_barcode_reads_for_QC`, `bespoke_parse_map_reads`, `pre_trim_fq`);
 - `q_control/` (`adjust_q_scores.py`, `filter_q.py`; this is a namespace package with no `__init__.py`);
 - `configs/` sample sheets;
 - `Pipfile` and `Pipfile.lock`.
 
-As copied, `mp_metagenomic_assessment_v4.py` fails with `ImportError: pipeline`. `map_genome_to_reads.py` fails on `import bespoke_parse_map_reads, pre_trim_fq`.
+As copied before revision 5, `mp_metagenomic_assessment_v4.py` failed with `ImportError: pipeline`, and `map_genome_to_reads.py` failed on `import bespoke_parse_map_reads, pre_trim_fq`. **All of these files are now present; see §22.**
 
 ---
 
@@ -534,3 +539,364 @@ Because three searches were blocked or skipped (header block), **nothing below i
 - The `viral_input-sequences.fna` and `ss_bacteria_sequences.fna` sources.
 - The original `mini-u-viral2` index files.
 - Historical tool versions.
+
+---
+
+## 21. Current Usability Verification
+
+> **Revision 5 note.** This section records the 2026-10-01 state. Checks 2–4, check 5's "no Pipfile" statement, and blockers B1, B2 and B5 have since changed; see §22. The verdict is unchanged: **NOT YET USABLE**.
+>
+> **Revision 6 note.** Checks 7 and 9, and blockers B3 and B4, are now resolved; see §23. The `run_coverage.py` interface was then finalised in §24. The verdict is still **NOT YET USABLE** (B5–B13).
+
+**Verified:** 2026-10-01, against the repository as committed at `31c9ea1` on branch `workflow-audit`, plus the files under `audit/` added in this pass. No workflow code was modified.
+
+**How it was verified:** static checks only, using `audit/static_validation.py`. The full output is saved in `audit/static_validation_results.txt`. The script:
+- byte-compiles every `.py` file into a temporary directory;
+- resolves imports from the syntax tree, exactly as Python would when each script is run directly;
+- rebuilds each script's argparse parser on its own (argparse only, with stand-in database keys for `mp_metagenomic_assessment_v4.py`);
+- parses every command line documented in `ADVTIG-protocol.md` and `URVDB.md` against those parsers, after substituting the run-books' own `VAR="…"` assignments;
+- syntax-checks the run-book code blocks with `bash -n`;
+- greps for file names that one stage writes and another reads.
+
+Nothing biological was executed: no Centrifuge, minimap2, samtools, database builds or decompression. No synthetic dry run was attempted, because every stage hard-codes absolute `/mnt/usersData` paths (see B9) and could not be pointed at a scratch directory without editing the code.
+
+### Verdict: **NOT YET USABLE**
+
+A new bioinformatician who clones this repository cannot run the intended workflow, even after supplying their own reads. Stage 1 and stage 1b fail on import, and stage 2 fails while building its argument parser. No environment is defined, no sample-sheet template exists, there is no current command sequence, and reference locations are hard-coded to a machine that no longer exists.
+
+### Check results
+
+| # | Check | Result | Evidence |
+|---|---|---|---|
+| 1 | All Python files compile | **PASS** (10/10). There is a `SyntaxWarning` for an invalid escape `\{` at `counter_screen.py:812`; it is cosmetic. | results §1 |
+| 2 | `pipeline/` and `q_control/` modules present | **FAIL.** `mp_metagenomic_assessment_v4.py` imports 12 `pipeline.*` and 2 `q_control.*` modules, and none are in the repo (`pipeline/` and `q_control/` are ABSENT). They exist only in `/mnt/d/GitHub/SMART-CAMP`. | results §2, §7 |
+| 3 | `map_genome_to_reads.py` at the documented path, with its sibling imports resolving | **FAIL.** The protocol (L44–45) calls `./pipeline/map_genome_to_reads.py`, but the file is at the repo root. Its imports `bespoke_parse_map_reads` and `pre_trim_fq` are missing. | results §2, §4 |
+| 4 | Sample sheets or example configs present | **FAIL.** There are no `.csv` or `.txt` sheets in the repo (§7 of the results: NONE). The documented sheets are `/home/james/SMART-CAMP/configs/viral_DNA_all9-2.{txt,csv}`, which live only in SMART-CAMP `configs/`. | results §7 |
+| 5 | A reproducible environment definition including pysam | **FAIL.** No `environment.yml`, `requirements.txt`, Pipfile, lock file or container exists in the repo. The required third-party Python packages are pandas, numpy, pysam and Biopython. The only candidate (SMART-CAMP `Pipfile.lock`) has no pysam. pandas is not installed in this machine's `python3` either. | results §2 |
+| 6 | Command-line tools documented and installable at stated versions | **FAIL.** centrifuge, porechop, NanoPlot, minimap2, samtools, ripgrep and GNU awk are required, and none is listed with a version anywhere in the repo. Only `rg` is installed here. | `command -v` checks; §11 |
+| 7 | `run_coverage.py` builds its parser and the documented syntax is consistent | **FAIL.** `argparse.ArgumentError: argument -e/--edit-distance-threshold: conflicting option string: -e`. All 37 documented `run_coverage.py` invocations, active and commented, fail. The current protocol form `-e 0.15 -e` cannot be valid under any parser. | results §3–4 |
+| 8 | Other parsers and documented invocations | **PASS** for `mp_metagenomic_assessment_v4.py` (6 lines), `map_genome_to_reads.py` (2), `deep_cov.py` (active lines with `-e 0.15`), `filt_low_complexity.py`, `counter_screen.py` (12) and `count_the_screen.py` (4). Only the commented or historical `deep_cov.py … -dd -e` lines fail (protocol L126, URVDB.md L326). | results §4 |
+| 9 | Fourth versus Fifth Pass naming | **FAIL.** `count_the_screen.py:564` writes `MetaFilt-Fifth-Pass.csv`, while `collect_taxid_primary_counts.py:91,179` reads `/mnt/usersData/ADVTIG_v3_untargeted/MetaFilt-Fourth-Pass.csv`. Run in the documented order, stage 7 fails with FileNotFoundError. | results §6 |
+| 10 | Each stage has one unambiguous current command | **FAIL.** The protocol interleaves three datasets, three Centrifuge databases, commented historical forms, DB builds and an unrelated P. aeruginosa appendix. Several stages appear more than once with different flags. `collect_taxid_primary_counts.py` must be run three times. `URVDB.md`'s code block also fails `bash -n` at L335 (a Markdown table inside the block), which is a sign that it is notes, not a script. | results §4–5 |
+| 11 | Required directory and input layout documented | **FAIL** in user-facing docs. The layout `{DIR}/{sample}/{run}/fastq_pass/*.fastq[.gz]` plus `{DIR}/{sample}/{run}/*sequencing*summary*.txt` (exactly one run-directory level) is documented only in this audit (§3, §10). There is no README or protocol text. | README is 16 bytes |
+| 12 | Database and reference build documented enough to reproduce | **PARTIAL.** Recipes exist in `URVDB.md` (L45–107) and the protocol (L154–357). But the `split_fa.py` settings that actually built `URVDB_split_fa/` exist only in git history (SMART-CAMP `7f6e9993`), not in the repo. The U-RVDB release is not stated. The protocol has two contradictory `mammalian_ref_species2.tsv` recipes. There is no build command for `ADV5.mmi` or `all_mammalian.mmi`. | §8–9 |
+| 13 | Reference assets supplied, generated or explicitly user-supplied | **FAIL.** The repo supplies **no** reference assets, and none are declared as user-supplied in any user document. The two RefSeq counter-screen panel sources (`viral_input-sequences.fna`, `ss_bacteria_sequences.fna`) have neither a build or download procedure nor a declaration as user-supplied. | §9 |
+| 14 | Paths configurable for a new user | **FAIL.** There are 43 hard-coded absolute paths outside comments: `run_coverage.py` 7, `deep_cov.py` 4, `counter_screen.py` 12, `count_the_screen.py` 2, `collect_taxid_primary_counts.py` 4 (plus 6 hard-coded sample names), `split_fa.py` 10, `mp_metagenomic_assessment_v4.py` 4. Database and panel locations are not command-line options. | `grep` count |
+
+### Blockers
+
+| ID | Blocker | What prevents execution | Class |
+|---|---|---|---|
+| B1 | `pipeline/` and `q_control/` absent | Stage 1 raises `ImportError: No module named pipeline` | **Repository packaging** |
+| B2 | `map_genome_to_reads.py` misplaced; `bespoke_parse_map_reads.py` and `pre_trim_fq.py` absent | Stage 1b: the documented path doesn't exist, and the script raises ImportError | **Repository packaging** |
+| B3 | Duplicate `-e` in `run_coverage.py` (introduced in `1c782e3e`) | Stage 2 exits before parsing any arguments | **Code defect** |
+| B4 | Stage 6 writes Fifth-Pass; stage 7 reads Fourth-Pass | Stage 7 FileNotFoundError (plus a project decision on which file is intended) | **Code defect** |
+| B5 | No sample-sheet template or schema in the repo | The user cannot build the two required formats: `.txt` for stage 1 and 1b, `.csv` with `date, NA, strain, concentration_CFU, batch, duration_h, Spike_species` for stages 2–6 | **Documentation** (+ packaging) |
+| B6 | No environment definition (pysam, Biopython, pandas, numpy) | Python imports fail; nothing defines a reproducible install | **Environment** |
+| B7 | CLI tools unspecified (centrifuge, porechop, NanoPlot, minimap2, samtools ≥1.10, rg, GNU awk) | Not installed; no versions chosen | **Environment** |
+| B8 | No current run-book, input-layout spec or output description | The user cannot tell which commands to run, in what order, or where to put reads | **Documentation** |
+| B9 | Hard-coded absolute paths (`/mnt/usersData`, `/home/james`) for the dataset root in stage 7, DB files, panels and the split collection | Stages cannot find user-supplied references without source edits | **Code defect** |
+| B10 | `mini-u-viral2` Centrifuge index, `URVDB_split_fa/`, index JSON, `fixed_URVDB_seqID2.map`, `RVDB2_seqID.map` | Not supplied. The recipe is partly in git only, and the RVDB release is unstated. These could be generated deterministically once a release is chosen and the split_fa configuration is restored. | **Missing reference resource** (needs a build script and a release decision) |
+| B11 | Mammalian panels: `all_mammalian_targets2.mmi`, `mammalian_ref_species2.tsv`, `ADV5.mmi`, `all_mammalian.mmi`, lambda DNA CS | Not supplied; the build recipe is partial or contradictory | **Missing reference resource** (deterministic build possible) |
+| B12 | `viral-input-sequences.*`, `bacterial-input-sequences.*` | Source FASTAs unknown or absent; no procedure | **Missing reference resource** (needs a project decision: substitute source or declare user-supplied) |
+| B13 | Literal `~` passed to Centrifuge (`-ci` in double quotes); unchecked tool exit codes; stage 1 needs a sequencing summary or it crashes at the end | Silent failure, then a misleading crash | **Code defect** (stage 1) / **Documentation** |
+| — | Raw ONT reads | Expected to be supplied by the user. **Not a blocker**, provided B8 documents the format and layout. | **Expected user-supplied input** |
+
+### Minimum changes to reach USABLE WITH EXTERNAL INPUT DATA
+
+1. **Packaging (B1, B2, B5):**
+   - Copy SMART-CAMP `pipeline/` (at least the 19 modules used) and `q_control/` into the repo root.
+   - Move `map_genome_to_reads.py` into `pipeline/`.
+   - Add `configs/` with example `.txt` and `.csv` sample sheets (the ADVTIG `viral_DNA_all9-2.*` files as templates).
+2. **Code (B3, B4, B9, B13):**
+   - Make `run_coverage.py` accept `-e <float>` for the edit-distance threshold, with extract-FASTQ on another flag, following the `deep_cov.py` pattern from `1c782e3e`.
+   - Make `collect_taxid_primary_counts.py` read the file stage 6 actually writes, or restore the Fourth-Pass name. Choose one.
+   - Replace hard-coded `/mnt/usersData` and `/home/james` locations with command-line options or a single config file:
+     - dataset root;
+     - DB root (split collection, index JSON, seqID maps, accession→taxid map);
+     - panel directory;
+     - sample list for stage 7.
+   - Expand `~`, or document an absolute `-ci` path.
+3. **Environment (B6, B7):** add an `environment.yml` pinning python, pandas, numpy, pysam, biopython, centrifuge, minimap2, samtools (≥1.10), porechop, nanoplot and ripgrep. Choose versions explicitly, since the historical ones are unrecorded.
+4. **References (B10–B12):**
+   - Add a reference build script, or a `Makefile`, that turns user-downloaded inputs into every derived asset:
+     - U-RVDB release → clean FASTA → seqID maps → split collection + JSON → `centrifuge-build`;
+     - NCBI host assemblies → `all_mammalian*.fa/.mmi` → label TSVs, using a single resolved `mammalian_ref_species2.tsv` recipe that includes `AF038600_1` and `DNA_CS`.
+   - Record the chosen accessions and releases in a manifest.
+   - Decide and document the viral and bacterial RefSeq panel sources, or declare them explicitly user-supplied with a stated format.
+5. **Documentation (B8):** write a README covering:
+   - purpose;
+   - the stage order with one current command per stage;
+   - the input layout (`{DIR}/{sample}/{run}/fastq_pass/` + sequencing summary; ONT single-end);
+   - the sample-sheet schema;
+   - the reference prerequisites;
+   - the outputs of each stage, which are final and which are temporary;
+   - resume behaviour (caches, repeat runs);
+   - resource expectations.
+
+   Move historical commands and the P. aeruginosa appendix out of the run-book.
+
+When items 1–5 are done, a new user supplying their own reads and running the reference build would meet the **USABLE WITH EXTERNAL INPUT DATA** criteria. Exact reproduction of the historical results stays out of reach for the reasons in §18–19.
+
+---
+
+## 22. Repository packaging pass (2026-10-02)
+
+**Scope.** Copy only. Workflow files that the audit had located elsewhere were copied into their original SMART-CAMP locations in this repository. No code, path, sample sheet, environment file or reference was modified. Nothing was built, and nothing was committed. The SMART-CAMP originals were left untouched; its working tree was still clean at HEAD `65a94b3a` after the copy. The WSL backups were not searched.
+
+### 22.1 How the copy set was chosen
+
+The set comes from the import graph, not from directory listings.
+- An AST walk of the transitive local imports, run in SMART-CAMP from `mp_metagenomic_assessment_v4.py` and `pipeline/map_genome_to_reads.py`, gave 21 `pipeline/` files (including `__init__.py`) and 2 `q_control/` files. This matches the revision-4 audit: 12 + 2 direct imports, 5 second-level imports, and the 2 `map_genome_to_reads` siblings.
+- **[Obs]** The pipeline modules' other file references were checked:
+  - every hard-coded `/home/james/SMART-CAMP/configs/...` or seqid-CSV reference in the copied pipeline modules sits inside an `if __name__ == "__main__":` block (AST-verified), so it never runs when the workflow imports the module;
+  - `{github}/all_seqids*.csv` (`dep_flat_sample_classifier_test.py` L108–110) is reached only on the BLAST branch, and the documented stage-1 commands pass `-skip`, which limits classification to Centrifuge.
+- Sample sheets: every sheet referenced in `ADVTIG-protocol.md` or `URVDB.md` was copied, plus the TXT companions of the referenced 9-2-5/9-2-6 CSVs.
+  - Viral_FDA `viral_DNA_all16-2.*` is included because the protocol runs it through the same scripts (L44, L102–140).
+  - `viral_DNA_all2.txt` and `viral_DNA_all10.txt` appear only in commented lines for other projects (Viral_CHO, Viral_human), so they were not copied.
+- The stage 2–7 scripts in `ADVTIG-untargeted/` were re-grepped and reference no other SMART-CAMP source.
+
+### 22.2 What was copied (provenance)
+
+All 36 files were copied with `cp -n --preserve=timestamps` from SMART-CAMP (`/mnt/d/GitHub/SMART-CAMP`, branch `master`, HEAD `65a94b3a`). Each one is git-tracked there, and its working-tree content equals the HEAD blob. "Source commit" below is the last commit that changed the file. Every copy was checked with `cmp` and is byte-identical. The same data is in `WORKFLOW_INVENTORY.tsv` (columns `Source Path`, `Source Repository`, `Source Commit`, `Byte Identical To Source`).
+
+| Target path | Source path (under `/mnt/d/GitHub/SMART-CAMP/`) | Source commit | Byte-identical | sha256 (first 16) |
+|---|---|---|---|---|
+| `pipeline/__init__.py` | `pipeline/__init__.py` | (last changed d237e129) | yes |  `e3b0c44298fc1c14` |
+| `pipeline/Convert_U2T_fastq.py` | `pipeline/Convert_U2T_fastq.py` | (last changed 57f47b92) | yes |  `54bde4fb8bdac730` |
+| `pipeline/bespoke_parse_map_reads.py` | `pipeline/bespoke_parse_map_reads.py` | (last changed d1d06b9d) | yes |  `a0610da1a95a19f8` |
+| `pipeline/cat_nanostats.py` | `pipeline/cat_nanostats.py` | (last changed 4fbec5e6) | yes |  `921f0b73d17a032a` |
+| `pipeline/database_config.py` | `pipeline/database_config.py` | (last changed cdab6e94) | yes |  `d1667d68d89377bf` |
+| `pipeline/dep_flat_sample_classifier_test.py` | `pipeline/dep_flat_sample_classifier_test.py` | (last changed 8f9dc1b3) | yes |  `3bcbd7b07d7ab099` |
+| `pipeline/dep_pre_chunker.py` | `pipeline/dep_pre_chunker.py` | (last changed 83037469) | yes |  `6824ab295e5c0230` |
+| `pipeline/dep_run_nanostat_analyses.py` | `pipeline/dep_run_nanostat_analyses.py` | (last changed b6cf93fc) | yes |  `fc5ed81b8ed930e9` |
+| `pipeline/find_barcode_reads_for_QC.py` | `pipeline/find_barcode_reads_for_QC.py` | (last changed 3758dddd) | yes |  `293ba7531d4d18ec` |
+| `pipeline/guppy_demux.py` | `pipeline/guppy_demux.py` | (last changed fa1d8406) | yes |  `e045081033e1ff2f` |
+| `pipeline/map_genome_to_reads.py` | `pipeline/map_genome_to_reads.py` | (last changed b16899bb) | yes |  `f445a1a640b8eeb6` |
+| `pipeline/mp_cent_interpreter_v3.py` | `pipeline/mp_cent_interpreter_v3.py` | (last changed 50fe201a) | yes |  `78efc48cf41bd7f8` |
+| `pipeline/mp_comb_ce_BN_v3.py` | `pipeline/mp_comb_ce_BN_v3.py` | (last changed dd81b06f) | yes |  `3be89f5e53b3e868` |
+| `pipeline/mp_demux_reads.py` | `pipeline/mp_demux_reads.py` | (last changed 619d90e1) | yes |  `393a50509d697fa7` |
+| `pipeline/mp_host_remove.py` | `pipeline/mp_host_remove.py` | (last changed 0154a078) | yes |  `59c2266076119998` |
+| `pipeline/mp_trim_reads_v2.py` | `pipeline/mp_trim_reads_v2.py` | (last changed 9ea2537c) | yes |  `191e275a61715e23` |
+| `pipeline/pre_trim_fq.py` | `pipeline/pre_trim_fq.py` | (last changed 62418d33) | yes |  `5ebd84a64c57d648` |
+| `pipeline/rank_BLAST_predictions_for_aa_v2.py` | `pipeline/rank_BLAST_predictions_for_aa_v2.py` | (last changed 62418d33) | yes |  `a05dc662432755a5` |
+| `pipeline/rank_centrifuge_predictions_for_aa_v2.py` | `pipeline/rank_centrifuge_predictions_for_aa_v2.py` | (last changed 62418d33) | yes |  `4e22a336492086c0` |
+| `pipeline/sample_name_sanity_check.py` | `pipeline/sample_name_sanity_check.py` | (last changed 62418d33) | yes |  `98671ad90f568bca` |
+| `pipeline/updated_blastn_interpreter_v2.py` | `pipeline/updated_blastn_interpreter_v2.py` | (last changed 2400b8ec) | yes |  `72451a10f4a013ed` |
+| `q_control/adjust_q_scores.py` | `q_control/adjust_q_scores.py` | (last changed 073a98fe) | yes |  `288562d88bcb19ce` |
+| `q_control/filter_q.py` | `q_control/filter_q.py` | (last changed b6207bb1) | yes |  `1bfeb41b05e6fdfb` |
+| `configs/viral_DNA_all9-2.txt` | `configs/viral_DNA_all9-2.txt` | (last changed 972e8db6) | yes |  `f8d792868e3dc449` |
+| `configs/viral_DNA_all9-2.csv` | `configs/viral_DNA_all9-2.csv` | (last changed 0de43abe) | yes |  `41ad32a2dd3aed35` |
+| `configs/viral_DNA_all9-2-1.csv` | `configs/viral_DNA_all9-2-1.csv` | (last changed a1012075) | yes |  `24676449b5f3a5ae` |
+| `configs/viral_DNA_all9-2-4.csv` | `configs/viral_DNA_all9-2-4.csv` | (last changed b53f0bba) | yes |  `6507268bf8b92509` |
+| `configs/viral_DNA_all9-2-5.csv` | `configs/viral_DNA_all9-2-5.csv` | (last changed 0e7689d5) | yes |  `36a97f3fbf7de1b4` |
+| `configs/viral_DNA_all9-2-5.txt` | `configs/viral_DNA_all9-2-5.txt` | (last changed a2753ec5) | yes |  `f8d792868e3dc449` |
+| `configs/viral_DNA_all9-2-6.csv` | `configs/viral_DNA_all9-2-6.csv` | (last changed 0e7689d5) | yes |  `84b4ca20fce20098` |
+| `configs/viral_DNA_all9-2-6.txt` | `configs/viral_DNA_all9-2-6.txt` | (last changed a2753ec5) | yes |  `f8d792868e3dc449` |
+| `configs/viral_DNA_all16-2.txt` | `configs/viral_DNA_all16-2.txt` | (last changed 8288c417) | yes |  `7d9391889b99ce8c` |
+| `configs/viral_DNA_all16-2.csv` | `configs/viral_DNA_all16-2.csv` | (last changed d8649b03) | yes |  `ffd81db1e6bbd4be` |
+| `Pipfile` | `Pipfile` | (last changed 2a305ed9) | yes |  `4ce2b104f1a5f513` |
+| `Pipfile.lock` | `Pipfile.lock` | (last changed 2a305ed9) | yes |  `b8543dbf7fce4bd4` |
+| `CONFIGURATION-FILE-INPUTS.txt` | `CONFIGURATION-FILE-INPUTS.txt` | (last changed e5360b0c) | yes |  `7501ed1bc6123a7b` |
+
+The files that were already in the repo before this pass were re-checked the same way and are byte-identical to SMART-CAMP HEAD: `ADVTIG-protocol.md`, `mp_metagenomic_assessment_v4.py`, root `map_genome_to_reads.py` (= `pipeline/map_genome_to_reads.py`) and all 9 files in `ADVTIG-untargeted/`. Their provenance is also in the TSV.
+
+### 22.3 Deliberately not copied
+
+| Item | Reason |
+|---|---|
+| The other ~140 SMART-CAMP `pipeline/` modules, including `map_genome_to_reads2.py`, `mp_trim_reads.py`, `mp_cent_interpreter*.py` and `ML_tool/` | Not in the import closure |
+| `q_control/basequal.py`, `bin_q_scores_length.py`, `fastq_parser.py` | Not in the import closure |
+| `all_seqids.csv`, `all_seqids_incl_plasmid.csv`, `C_RVDB_seqids.csv` (8–13 MB) | Reference lookup tables. Only used on the BLAST branch (not reached with `-skip`) or in `__main__` blocks. |
+| `glue.py` (methylfilter) | Not a workflow dependency (revision 4) |
+| `split_fa.py` @ `7f6e9993`, `run_coverage.py` @ `aff9daba`, `count_the_screen.py` @ `e4617a07` | Historical revisions of files already in the repo. Restoring any of them would change behaviour; deferred. |
+| `Seq commands.md`, SMART-CAMP `README.md` | Historical notes and parent-project documentation, not workflow support files |
+| All FASTAs, indexes, databases, reads and historical outputs | Out of scope for this pass |
+
+### 22.4 Verification
+
+1. **The existing static checks, rerun unchanged** (`audit/static_validation.py` → `audit/static_validation_results_packaging.txt`):
+   - §1: all 33 `.py` files compile.
+   - §2: all 14 `pipeline.*`/`q_control.*` imports of `mp_metagenomic_assessment_v4.py` resolve, and `pipeline/map_genome_to_reads.py` resolves both of its helpers.
+   - §2 still prints MISS lines, for two reasons:
+     - the root duplicate `map_genome_to_reads.py`, whose MISSes are genuine;
+     - five `from pipeline import …` lines inside `pipeline/*.py`. These are an artefact of the checker, which resolves each file against its own directory. At runtime they resolve against the entry script's directory (see check 2).
+   - §4: the protocol's `./pipeline/map_genome_to_reads.py` invocations (L44–45) changed from `PATH MISSING` to `path OK`.
+   - The 42 FAIL lines are otherwise identical to revision 4. They are the known `run_coverage.py` parser failure (B3), which is out of scope here and not counted against packaging.
+   - §2 now reports `Pipfile`/`Pipfile.lock` present.
+2. **The new runtime-faithful import check** (`audit/packaging_import_check.py` → `audit/packaging_import_check_results.txt`) uses `importlib.util.find_spec` with `sys.path` set as it is at runtime, and executes no workflow code. **OVERALL PASS:**
+   - `mp_metagenomic_assessment_v4.py`: 21/21 local imports resolve, transitively, including every second-level `from pipeline import …`;
+   - `pipeline/map_genome_to_reads.py`: 2/2;
+   - `ADVTIG-untargeted/deep_cov.py`: 1/1;
+   - the root `map_genome_to_reads.py` fails 0/2 (informational: misplaced duplicate).
+   - The remaining non-stdlib imports are third-party (pandas, numpy, pysam, Bio). They are an environment matter (B6), not packaging.
+3. **Byte identity:** 36/36 identical (`cmp`), and each source matches its git HEAD blob.
+
+### 22.5 Blocker status after this pass
+
+| ID | Status | Basis |
+|---|---|---|
+| B1 | **RESOLVED** | The packages are physically present, and every internal import resolves |
+| B2 | **RESOLVED** | The canonical path exists, and its helpers are present and resolve. The root duplicate remains (§22.6). |
+| B5 | **PARTIALLY RESOLVED** | Sheets and the schema file are present. The documented single schema is still open, and references still point at `/home/james/SMART-CAMP/configs` (B9). |
+| B6 | OPEN | The Pipfile pair is present but unchanged and incomplete (no pysam, no CLI tools) |
+| B3, B4, B7–B13 | OPEN | Not packaging; unchanged |
+
+Verdict for §21 is unchanged: **NOT YET USABLE**.
+
+### 22.6 Duplicated or misplaced files, for a later decision
+
+- **D1** `./map_genome_to_reads.py` (repo root) is byte-identical to `pipeline/map_genome_to_reads.py`. Its location is wrong: the protocol calls `./pipeline/…`, and from the root its helper imports cannot resolve. It was retained as instructed.
+- **D2** `configs/viral_DNA_all9-2-5.txt` and `configs/viral_DNA_all9-2-6.txt` are byte-identical to `configs/viral_DNA_all9-2.txt` (all six samples), despite their single-sample names. They were duplicated like this in the source and are preserved unchanged.
+- **D3 (path, not file)** Several references still point outside this repository; none were changed (B9, deferred):
+  - the run-book invokes `~/SMART-CAMP/mp_metagenomic_assessment_v4.py`;
+  - sample sheets are referenced as `/home/james/SMART-CAMP/configs/…`;
+  - `github = "/home/james/SMART-CAMP/"` (`mp_metagenomic_assessment_v4.py` L490).
+
+### 22.7 Source or configuration dependencies still missing
+
+- **Packaging:** none. Every source and configuration file that the audit found elsewhere, and that belongs in the repo, is now present.
+- **Still outstanding**, all outside this pass:
+  - a `run_coverage.py` revision that accepts the documented CLI (never committed; B3);
+  - the `split_fa.py` configuration for URVDB, which exists only as git revision `7f6e9993`;
+  - a complete environment definition (B6/B7);
+  - the source FASTAs for `viral-input-sequences` and `bacterial-input-sequences` (B12);
+  - all reference data, indexes and raw reads (B10, B11, inputs).
+
+---
+
+## 23. B3 and B4 code corrections (2026-10-02)
+
+**Scope.** Only B3 and B4 were corrected. No paths, configuration handling, sample sheets, references, environment, thresholds or scientific logic were changed. Nothing was committed. The root `map_genome_to_reads.py` duplicate is still in place.
+
+### 23.1 Source files modified
+
+| File | Change | Lines |
+|---|---|---|
+| `ADVTIG-untargeted/run_coverage.py` | `parser.add_argument('-e', '--extract-fastq', …)` → `parser.add_argument('-x', '--extract-fastq', …)` | L1329 (1 line) |
+| `ADVTIG-untargeted/collect_taxid_primary_counts.py` | `FILTER_CSV = ".../MetaFilt-Fourth-Pass.csv"` → `".../MetaFilt-Fifth-Pass.csv"` (directory unchanged) | L91, L179 (2 lines) |
+| `ADVTIG-protocol.md` | Current commands L59 and L106: `-e 0.15 -e` → `-e 0.15 -x`. Each line has a trailing comment recording the original `-e 0.15 -e` text from `1c782e3e`. Historical commented lines L39, L119 and L126 got a trailing `[HISTORICAL …]` tag; their commands are unchanged. | 5 lines edited, none inserted, so line numbers cited elsewhere in this inventory stay valid |
+| `ADVTIG-untargeted/URVDB.md` | A 3-line `# NOTE` at the end of the code block (L474–476) marks every `run_coverage.py`/`deep_cov.py` command in the log as historical, with the old flag meanings. No command was changed. | appended only |
+| `audit/static_validation.py` | Validator extended; see §23.4 | — |
+
+As a result, these four workflow files are no longer byte-identical to SMART-CAMP HEAD. `WORKFLOW_INVENTORY.tsv` records why.
+
+### 23.2 Exact behavioural change
+
+- **B3:** the change is limited to the command-line flag name for FASTQ extraction, which is now `-x` (long form `--extract-fastq` and destination `extract_fastq` unchanged). `-e`/`--edit-distance-threshold` is now unambiguous: a float, with the default **unchanged at 0.1**.
+  - The parser previously could not be built at all, so the script could not start. With the same flags it now does exactly what the `1c782e3e` code intended.
+  - Unchanged: extraction (`finish_setup`), the alignment and edit-distance calculations (`extract_mapping_data`, `needs_ed_rerun`), and all thresholds.
+- **B4:** stage 7 now reads the merged table that current stage 6 writes, `{out_dir}/MetaFilt-Fifth-Pass.csv` (`count_the_screen.py:564`).
+  - The columns stage 7 reads (`Sample`, `TaxID`, `SeqID`) are present in the Fifth-Pass schema: the historical `/mnt/e/SequencingData/ADVTIG_primary/MetaFilt-Fifth-Pass.csv` has them at the same positions as `MetaFilt-Fourth-Pass_v4.csv` (cols 1, 2, 35).
+  - Unchanged: filtering, joining and counting.
+  - The **data content** of the stage-7 input does change, because current Fifth Pass holds more (Sample, TaxID) keys than historical Fourth Pass v4 (§7). This was always the consequence of running the current code in order, and it is why historical Fourth-Pass baselines are not directly comparable.
+
+### 23.3 Provenance for the choices
+
+- **B3: why `-x`.**
+  - Commit `1c782e3e` (2026-02-12) added `-e/--edit-distance-threshold` (float) to `run_coverage.py` while leaving `-e/--extract-fastq`.
+  - In the same commit, `deep_cov.py` resolved the identical clash by moving its extract flag to `-x` and keeping `-e` as the float (§6).
+  - The protocol written in that commit uses `-e 0.15` on every stage, so `-e` = threshold was the intent. `-x` follows the existing `deep_cov.py` convention.
+  - The 0.1 default was kept because it is the default in the `1c782e3e` code. Historical runs at 0.10 used the hard-coded value from before `1c782e3e`.
+- **B4: why Fifth Pass.**
+  - `a68d1880` (2026-02-02) renamed the stage-6 output from `MetaFilt-Fourth-Pass.csv` to `MetaFilt-Fifth-Pass.csv`, but `collect_taxid_primary_counts.py` was never updated to match (§7).
+  - The user directed standardising on Fifth Pass for the current workflow.
+  - No other executable code references either name: the only other `MetaFilt-*-Pass` strings are stage 6's `-VIRAL-ONLY`/`-BACTERIAL-ONLY` subset outputs, which are already Fifth-Pass.
+  - Historical Fourth-Pass result files were not touched.
+
+### 23.4 Validation evidence
+
+`audit/static_validation_results_b3b4.txt` holds the output of `python3 audit/static_validation.py`.
+
+**Changes to the validator** (classification only; no existing check removed or relaxed):
+- §4 now tags each documented command:
+  - **CURRENT** = an uncommented line in `ADVTIG-protocol.md`;
+  - **HISTORICAL** = a commented line in `ADVTIG-protocol.md`, or any line in the `URVDB.md` log.
+- Historical lines are still parsed against the current parsers. Their failures print as `HFAIL` and are counted separately.
+- §6 gains an explicit stage 6 → 7 filename comparison.
+- A new §8 holds targeted B3/B4 checks.
+
+**Results:**
+
+| Check | Result |
+|---|---|
+| All Python files compile (§1) | **PASS** 33/33 |
+| `run_coverage.py` parser constructs (§3) | **PASS** (was `argparse.ArgumentError … conflicting option string: -e`) |
+| Help text generates (§8) | **PASS** via `format_help()`. The real file's `run_coverage.py --help` also exits 0 through its own `__main__`. pandas, pysam, numpy and Biopython are not installed (B6), so inert stand-ins were injected for those imports only; `--help` exits before any analysis code. |
+| `-e 0.15` → threshold 0.15, no extraction | **PASS** |
+| `-x` → extraction, threshold default 0.1 | **PASS** (`--extract-fastq` also works) |
+| `-e 0.15 -x` and `-x -e 0.15` coexist | **PASS** |
+| `-e 0.15 -r`, `-e 0.15 -l`, `-e 0.15 -a -x` | **PASS** |
+| Bare `-e` (old extract form) | rejected, **as expected** |
+| Current documented commands (§4) | **41 OK, 0 FAIL**, including all 8 `run_coverage.py` lines (L59–62, L106–109) |
+| Historical documented commands (§4) | 26 still parse; **18 HFAIL**, all explained (see list below) |
+| Stage 6 output = stage 7 input (§6, §8) | **PASS**: both `MetaFilt-Fifth-Pass.csv` |
+| Remaining `FAIL` lines in the whole report | **1**: the pre-existing `URVDB.md` `bash -n` failure (a Markdown table inside the code block, L335). It is a documentation issue, unrelated to B3/B4. |
+
+**The 18 HFAIL lines:**
+- 9 use the old bare `-e` = extract: protocol L39, L119 and L126 (`deep_cov`), and URVDB.md L251, L260, L311, L320, L326 (`deep_cov`) and L361.
+- 6 use `-c 2` (model number), which was removed from `run_coverage.py` in `aac5714b` on 2025-03-27: protocol L40–42 and URVDB.md L312–314. L39 and L311 also use `-c 2` but are counted under the bare `-e` group above.
+- 2 omit the `--database` argument, which later became required: URVDB.md L362–363.
+- 1 is a commented `deep_cov.py` with no arguments: protocol L91.
+
+None of these were made to parse. Supporting them would contradict the current `-e FLOAT` syntax.
+
+### 23.5 Issues found, not acted on
+
+- **Stage-7 output name.** `collect_taxid_primary_counts.py` L182 still writes `Deduplicated-Read-Counts-MetaFilt-Fourth-Pass-FILTERED.csv`. After B4 its contents are filtered by Fifth Pass, but the name says Fourth Pass, and a rerun in `/mnt/usersData/ADVTIG_v3_untargeted/` would overwrite the historically named file. No later stage reads it, so it is not part of the stage-sequence link and was left unchanged. **Decision needed.**
+- **Historical `-c` flag.** Protocol L39–42 (commented) and URVDB.md L311–314 use `-c 2`, which no longer exists. The revision-4 audit had attributed all `run_coverage` failures to the `-e` clash.
+- **Cached outputs may skip the new threshold.** `run_coverage.py` reuses existing editdist TSVs unless `needs_ed_rerun` triggers. Runs into directories that already hold 0.10-era outputs depend on that logic, which was not changed or exercised here.
+
+### 23.6 Blocker status after this pass
+
+**B3 RESOLVED. B4 RESOLVED.** B1 and B2 stay resolved (§22), and B5 is partially resolved. **B6–B13 are OPEN** and were not touched. The §21 verdict is still **NOT YET USABLE**.
+
+---
+
+## 24. Current workflow decision: `run_coverage.py` command line (2026-10-02)
+
+**Decision.** In the reconstructed workflow, the **current** `run_coverage.py` interface is:
+
+| Function | Current option | Default |
+|---|---|---|
+| FASTQ extraction | `-x` / `--extract-fastq` (flag) | off |
+| Edit-distance threshold | `--edit-distance FLOAT` (long option only; internal name `edit_distance_threshold`) | **0.15** |
+| `-e` | **does not exist** | — |
+
+Omitting `--edit-distance` behaves exactly like `--edit-distance 0.15`. Any other float can still be supplied explicitly: the value flows unchanged into `main()` → `extract_mapping_data()` → `needs_ed_rerun()` / `get_editdist_metrics()`, as it did at `1c782e3e`. This supersedes the interim `-e FLOAT` (default 0.1) form recorded in §23. Only the CLI changed: the edit-distance calculation was neither investigated nor modified.
+
+**How this differs from historical behaviour.**
+
+| Revisions | `-e` meant | Edit-distance threshold |
+|---|---|---|
+| up to `aff9daba` (2026-02-12 10:36) | extract FASTQ (`store_true`) | hard-coded 0.10, not a CLI option |
+| `1c782e3e` (2026-02-12 13:08), the SMART-CAMP HEAD | **both**: extract FASTQ *and* `-e/--edit-distance-threshold` (default 0.1), so argparse failed and the script could not start | intended 0.15 per the protocol's `-e 0.15` lines (never runnable) |
+| **current (this repo)** | **nothing; no `-e`** | `--edit-distance`, default **0.15** |
+
+Historical commands keep their original `-e` and `-c` syntax and are labelled HISTORICAL in the run-books (§23.1). The validator parses them against the current CLI and reports them as HFAIL.
+
+**Files changed in this step:**
+- `ADVTIG-untargeted/run_coverage.py` L1333: `parser.add_argument("-e", "--edit-distance-threshold", type=float, default=0.1, …)` → `parser.add_argument("--edit-distance", dest="edit_distance_threshold", type=float, default=0.15, …)`. L1329 keeps `-x/--extract-fastq` from §23.
+- `ADVTIG-protocol.md`: all 8 current `run_coverage.py` lines (L59–62, L106–109) now use `--edit-distance 0.15`; the extraction lines L59 and L106 read `--edit-distance 0.15 -x`. Each line has a trailing note quoting its original `1c782e3e` text, for example `as committed in 1c782e3e this line read '-e 0.15 -r'`. No lines were inserted.
+- `audit/static_validation.py` §8: updated to the new interface, and adds a scan of the current `run_coverage` commands.
+
+**Validation.** `audit/static_validation_results_cli.txt` holds the output of `python3 audit/static_validation.py`.
+
+| Check | Result |
+|---|---|
+| All Python files compile | PASS 33/33 |
+| Parser constructs; `format_help()` lists `-x, --extract-fastq` and `--edit-distance`, with no `-e` | PASS |
+| Real `run_coverage.py --help` (third-party imports stubbed, since B6 means they are not installed) | PASS, exit 0 |
+| `--edit-distance 0.15` → 0.15 | PASS |
+| `-x` → extraction on, threshold 0.15 | PASS |
+| `--edit-distance 0.15 -x` and `-x --edit-distance 0.15` | PASS |
+| `--edit-distance 0.15` with `-r`, with `-l`, and with `-a -x` | PASS |
+| Default threshold is 0.15, and omitting the option equals `--edit-distance 0.15` | PASS |
+| An explicit other value (`--edit-distance 0.10`) is accepted | PASS |
+| `-e 0.15` and bare `-e` are rejected | PASS (as intended) |
+| No current `run_coverage.py` command uses `-e`; all 8 pass `--edit-distance 0.15`; extraction lines end in `--edit-distance 0.15 -x` | PASS |
+| §4 documented commands | CURRENT 41 OK / 0 FAIL; HISTORICAL 26 parse / 18 HFAIL (same classification as §23.4) |
+| Remaining FAIL lines | 1, the pre-existing `URVDB.md` `bash -n` failure (unrelated) |
+
+**Scope note.** The current `deep_cov.py`, `counter_screen.py` and `count_the_screen.py` commands still pass `-e 0.15`. That `-e` belongs to *their own* CLIs, where it is a valid float threshold (§4: OK). They are outside this `run_coverage.py`-only decision and were not changed.
+

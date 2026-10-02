@@ -471,4 +471,7 @@ awk -F',' '$3 > 100' "${OUTPUT_FILE}"
 
 ###############################################################################################
 
+# NOTE (2026-10-02, B3 fix): every run_coverage.py / deep_cov.py command in this log is HISTORICAL and is preserved as originally run.
+# They use the CLI of their date: '-e' = extract FASTQ (renamed '-x' in the current run_coverage.py; deep_cov.py made the same change in 1c782e3e),
+# '-c N' = model number (removed in aac5714b, 2025-03-27). For current commands see ADVTIG-protocol.md.
 ```

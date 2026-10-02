@@ -88,7 +88,7 @@ mapping_file = f"{DIRECTORY}/sample_taxid_bams.json"
 
 if not os.path.exists(mapping_file):
 
-    FILTER_CSV = "/mnt/usersData/ADVTIG_v3_untargeted/MetaFilt-Fourth-Pass.csv"
+    FILTER_CSV = "/mnt/usersData/ADVTIG_v3_untargeted/MetaFilt-Fifth-Pass.csv"
     df_filt_bam_find = pd.read_csv(FILTER_CSV, usecols=["Sample", "TaxID", "SeqID"])
     df_filt_bam_find["Sample"] = df_filt_bam_find["Sample"].astype(str)
     df_filt_bam_find["TaxID"] = df_filt_bam_find["TaxID"].astype(str)
@@ -176,7 +176,7 @@ else:
         print(f"Loading csv from {out_csv}")
         df = pd.read_csv(out_csv)
 
-        FILTER_CSV = "/mnt/usersData/ADVTIG_v3_untargeted/MetaFilt-Fourth-Pass.csv"
+        FILTER_CSV = "/mnt/usersData/ADVTIG_v3_untargeted/MetaFilt-Fifth-Pass.csv"
         df_filt = pd.read_csv(FILTER_CSV, usecols=["Sample", "TaxID"])
 
         filt_OUT_CSV = "/mnt/usersData/ADVTIG_v3_untargeted/Deduplicated-Read-Counts-MetaFilt-Fourth-Pass-FILTERED.csv"

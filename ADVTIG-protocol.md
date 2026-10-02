@@ -36,7 +36,7 @@ awk 'BEGIN{FS="\t"} $2 == 10891 {print FILENAME ": " $0}' /mnt/usersData/ADVTIG/
 # DIRECTORY="/mnt/usersData/ADVTIG_v2_untargeted/"
 # SAMPLES="/home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv"
 # CE_DICT_ID="uviral25-2"
-# time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -a -c 2 -e # asm5; extract fastq
+# time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -a -c 2 -e # asm5; extract fastq [HISTORICAL command, preserved as originally run: pre-1c782e3e run_coverage CLI where -e = extract FASTQ (current: -x); -c removed in aac5714b]
 # time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -a -c 2 -r # asm5; run analysis
 # time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -a -c 2 # asm5; stats and concatenate
 # time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -a -c 2 -l # add labels to the mapped csv
@@ -56,10 +56,10 @@ DIRECTORY="/mnt/usersData/ADVTIG_v2_untargeted/"
 SAMPLES="/home/james/SMART-CAMP/configs/viral_DNA_all9-2.csv"
 CE_DICT_ID="uviral25-2"
 # "First Run on unfiltered reads"
-time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -e 0.15 -e # map-ont; model 2; extract fastq - 2400m
-time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -e 0.15 -r # map-ont; model 2; run analysis - 1200m
-time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -e 0.15 # map-ont; model 2; stats and concatenate - 1000m
-time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -e 0.15 -l # add labels to the mapped csv
+time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" --edit-distance 0.15 -x # map-ont; model 2; extract fastq - 2400m [current CLI 2026-10-02: --edit-distance 0.15 -x; as committed in 1c782e3e this line read '-e 0.15 -e', which never parsed]
+time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" --edit-distance 0.15 -r # map-ont; model 2; run analysis - 1200m [current CLI 2026-10-02: --edit-distance 0.15; as committed in 1c782e3e this line read '-e 0.15 -r', which never parsed]
+time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" --edit-distance 0.15 # map-ont; model 2; stats and concatenate - 1000m [current CLI 2026-10-02: --edit-distance 0.15; as committed in 1c782e3e this line read '-e 0.15', which never parsed]
+time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" --edit-distance 0.15 -l # add labels to the mapped csv [current CLI 2026-10-02: --edit-distance 0.15; as committed in 1c782e3e this line read '-e 0.15 -l', which never parsed]
 
 # "Second Run on filtered reads"
 DIRECTORY="/mnt/usersData/ADVTIG_v3_untargeted/"
@@ -103,10 +103,10 @@ time ~/SMART-CAMP/mp_metagenomic_assessment_v4.py -d "${DIRECTORY}" -t 5 -ci "${
 
 # "First Run on unfiltered reads"
 SAMPLES_CSV="/home/james/SMART-CAMP/configs/viral_DNA_all16-2.csv"
-time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -e 0.15 -e # map-ont; model 2; extract fastq - 2400m
-time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -e 0.15 -r # map-ont; model 2; run analysis - 1200m
-time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -e 0.15 # map-ont; model 2; stats and concatenate - 1000m
-time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -e 0.15 -l # add labels to the mapped csv
+time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" --edit-distance 0.15 -x # map-ont; model 2; extract fastq - 2400m [current CLI 2026-10-02: --edit-distance 0.15 -x; as committed in 1c782e3e this line read '-e 0.15 -e', which never parsed]
+time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" --edit-distance 0.15 -r # map-ont; model 2; run analysis - 1200m [current CLI 2026-10-02: --edit-distance 0.15; as committed in 1c782e3e this line read '-e 0.15 -r', which never parsed]
+time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" --edit-distance 0.15 # map-ont; model 2; stats and concatenate - 1000m [current CLI 2026-10-02: --edit-distance 0.15; as committed in 1c782e3e this line read '-e 0.15', which never parsed]
+time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" --edit-distance 0.15 -l # add labels to the mapped csv [current CLI 2026-10-02: --edit-distance 0.15; as committed in 1c782e3e this line read '-e 0.15 -l', which never parsed]
 
 # "Second Run on filtered reads"
 DIRECTORY="/mnt/usersData/Viral_FDA/"
@@ -116,14 +116,14 @@ time ./ADVTIG-untargeted/deep_cov.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "$
 time ./ADVTIG-untargeted/deep_cov.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -e 0.15 -dd -x # extract stats - 1024m (rerun) # rerun for intermediate json if changing ED
 time ./ADVTIG-untargeted/deep_cov.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -e 0.15 -dd -a # extract stats - 34m
 
-# time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -e # map-ont; model 2; extract fastq - 1800m
+# time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -e # map-ont; model 2; extract fastq - 1800m [HISTORICAL command, preserved as originally run: pre-1c782e3e run_coverage CLI where -e = extract FASTQ (current: -x)]
 # time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -r # map-ont; model 2; run analysis - 900m
 # time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" # map-ont; model 2; stats and concatenate - 700m
 # time ./ADVTIG-untargeted/run_coverage.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -l # add labels to the mapped csv - 292m
 
 # # run first twice
 # time ./ADVTIG-untargeted/deep_cov.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -dd # deduplicate fq - 159m
-# time ./ADVTIG-untargeted/deep_cov.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -dd -e # extract stats
+# time ./ADVTIG-untargeted/deep_cov.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -dd -e # extract stats [HISTORICAL command, preserved as originally run: pre-1c782e3e deep_cov CLI where -e = extract (current: -x)]
 # time ./ADVTIG-untargeted/deep_cov.py -s "${SAMPLES_CSV}" -d "${DIRECTORY}" -o "${DIRECTORY}" --database "${CE_DICT_ID}" -dd -a # extract stats
 
 time ./ADVTIG-untargeted/filt_low_complexity.py -o "${DIRECTORY}"

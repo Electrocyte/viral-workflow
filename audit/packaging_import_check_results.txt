@@ -1,0 +1,56 @@
+
+## mp_metagenomic_assessment_v4.py  (sys.path[0] = .)
+
+OK    mp_metagenomic_assessment_v4.py:27: from pipeline import Convert_U2T_fastq -> pipeline/Convert_U2T_fastq.py
+OK    mp_metagenomic_assessment_v4.py:27: from pipeline import mp_host_remove -> pipeline/mp_host_remove.py
+OK    mp_metagenomic_assessment_v4.py:27: from pipeline import mp_trim_reads_v2 -> pipeline/mp_trim_reads_v2.py
+OK    mp_metagenomic_assessment_v4.py:27: from pipeline import mp_demux_reads -> pipeline/mp_demux_reads.py
+OK    mp_metagenomic_assessment_v4.py:27: from pipeline import database_config -> pipeline/database_config.py
+OK    mp_metagenomic_assessment_v4.py:27: from pipeline import rank_centrifuge_predictions_for_aa_v2 -> pipeline/rank_centrifuge_predictions_for_aa_v2.py
+OK    mp_metagenomic_assessment_v4.py:27: from pipeline import sample_name_sanity_check -> pipeline/sample_name_sanity_check.py
+OK    mp_metagenomic_assessment_v4.py:27: from pipeline import dep_flat_sample_classifier_test -> pipeline/dep_flat_sample_classifier_test.py
+OK    mp_metagenomic_assessment_v4.py:27: from pipeline import mp_comb_ce_BN_v3 -> pipeline/mp_comb_ce_BN_v3.py
+OK    mp_metagenomic_assessment_v4.py:27: from pipeline import mp_cent_interpreter_v3 -> pipeline/mp_cent_interpreter_v3.py
+OK    mp_metagenomic_assessment_v4.py:27: from pipeline import dep_run_nanostat_analyses -> pipeline/dep_run_nanostat_analyses.py
+OK    mp_metagenomic_assessment_v4.py:27: from pipeline import guppy_demux -> pipeline/guppy_demux.py
+OK    mp_metagenomic_assessment_v4.py:33: from q_control import adjust_q_scores -> q_control/adjust_q_scores.py
+OK    mp_metagenomic_assessment_v4.py:33: from q_control import filter_q -> q_control/filter_q.py
+OK    pipeline/dep_run_nanostat_analyses.py:9: from pipeline import cat_nanostats -> pipeline/cat_nanostats.py
+OK    pipeline/dep_run_nanostat_analyses.py:9: from pipeline import find_barcode_reads_for_QC -> pipeline/find_barcode_reads_for_QC.py
+OK    pipeline/mp_comb_ce_BN_v3.py:16: from pipeline import rank_BLAST_predictions_for_aa_v2 -> pipeline/rank_BLAST_predictions_for_aa_v2.py
+OK    pipeline/dep_flat_sample_classifier_test.py:11: from pipeline import database_config -> pipeline/database_config.py
+OK    pipeline/dep_flat_sample_classifier_test.py:11: from pipeline import updated_blastn_interpreter_v2 -> pipeline/updated_blastn_interpreter_v2.py
+OK    pipeline/mp_demux_reads.py:16: from pipeline import dep_pre_chunker -> pipeline/dep_pre_chunker.py
+OK    pipeline/mp_trim_reads_v2.py:19: from pipeline import dep_pre_chunker -> pipeline/dep_pre_chunker.py
+
+Local files in closure (20): mp_metagenomic_assessment_v4.py, pipeline/Convert_U2T_fastq.py, pipeline/cat_nanostats.py, pipeline/database_config.py, pipeline/dep_flat_sample_classifier_test.py, pipeline/dep_pre_chunker.py, pipeline/dep_run_nanostat_analyses.py, pipeline/find_barcode_reads_for_QC.py, pipeline/guppy_demux.py, pipeline/mp_cent_interpreter_v3.py, pipeline/mp_comb_ce_BN_v3.py, pipeline/mp_demux_reads.py, pipeline/mp_host_remove.py, pipeline/mp_trim_reads_v2.py, pipeline/rank_BLAST_predictions_for_aa_v2.py, pipeline/rank_centrifuge_predictions_for_aa_v2.py, pipeline/sample_name_sanity_check.py, pipeline/updated_blastn_interpreter_v2.py, q_control/adjust_q_scores.py, q_control/filter_q.py
+Third-party top-level packages (environment, not packaging): numpy, pandas
+RESULT PASS: 21 local imports resolved, 0 unresolved
+
+## pipeline/map_genome_to_reads.py  (sys.path[0] = pipeline)
+
+OK    pipeline/map_genome_to_reads.py:22: import bespoke_parse_map_reads -> pipeline/bespoke_parse_map_reads.py
+OK    pipeline/map_genome_to_reads.py:22: import pre_trim_fq -> pipeline/pre_trim_fq.py
+
+Local files in closure (3): pipeline/bespoke_parse_map_reads.py, pipeline/map_genome_to_reads.py, pipeline/pre_trim_fq.py
+Third-party top-level packages (environment, not packaging): pandas
+RESULT PASS: 2 local imports resolved, 0 unresolved
+
+## ADVTIG-untargeted/deep_cov.py  (sys.path[0] = ADVTIG-untargeted)
+
+OK    ADVTIG-untargeted/deep_cov.py:15: from run_coverage import run_analysis, find_mapped_files, extract_mapping_data, add_labels -> ADVTIG-untargeted/run_coverage.py
+
+Local files in closure (2): ADVTIG-untargeted/deep_cov.py, ADVTIG-untargeted/run_coverage.py
+Third-party top-level packages (environment, not packaging): Bio, numpy, pandas, pysam
+RESULT PASS: 1 local imports resolved, 0 unresolved
+
+## map_genome_to_reads.py  (sys.path[0] = .)  [NON-CANONICAL: misplaced duplicate, informational only]
+
+MISS  map_genome_to_reads.py:22: import bespoke_parse_map_reads -- not on runtime sys.path; exists in repo at pipeline/bespoke_parse_map_reads.py
+MISS  map_genome_to_reads.py:22: import pre_trim_fq -- not on runtime sys.path; exists in repo at pipeline/pre_trim_fq.py
+
+Local files in closure (1): map_genome_to_reads.py
+Third-party top-level packages (environment, not packaging): pandas
+RESULT FAIL: 0 local imports resolved, 2 unresolved
+
+OVERALL (canonical entry points): PASS

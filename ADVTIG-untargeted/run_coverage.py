@@ -1326,11 +1326,11 @@ def parse_arguments():
     parser.add_argument('-s', '--sample-config', type=str, required=True, help='Path to the sample config file')
     parser.add_argument('-a', '--asm5', action='store_true', help='Use asm5 for minimap2')
     parser.add_argument('-f', '--fastq', action='store_true', help='Use full fastq')
-    parser.add_argument('-e', '--extract-fastq', action='store_true', help='Extract fastq files')
+    parser.add_argument('-x', '--extract-fastq', action='store_true', help='Extract fastq files')
     parser.add_argument('-r', '--run-alignment', action='store_true', help='Run alignment')
     parser.add_argument('-l', '--label-species', action='store_true', help='Label species')
     parser.add_argument('-db', '--database', type=str, required=True, help='Path to the database')
-    parser.add_argument("-e", "--edit-distance-threshold", type=float, default=0.1, help="Edit distance threshold for filtering alignments.")
+    parser.add_argument("--edit-distance", dest="edit_distance_threshold", type=float, default=0.15, help="Edit distance threshold for filtering alignments (default: 0.15).")
     return parser.parse_args()
 
 
