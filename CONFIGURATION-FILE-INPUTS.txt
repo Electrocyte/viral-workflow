@@ -1,0 +1,153 @@
+##### CONFIGURATION FILE INPUTS #####
+Required columns
+date - YYYYMMDD, int
+NA - nucleic acid e.g. "DNA", string
+strain - all sample parameters, string
+concentration_CFU - "0CFU" if negative or not important, string
+batch - experiment number, if important, if not, use 1, int
+duration_h - experiment sequencing duration, if important, if not, use 12, int
+
+Optional columns
+Flowcell_no - flow cell used (can be left blank), string
+Sample_original - blank, string
+Identifier - this will be used for multiplexed samples only, and can be discussed further if multiplexing is a consideration in future work (can be left blank), string
+Barcode - if multiplexing (can be left blank) - format "barocode01", string
+Total_cycles - number of PCR cycles, if PCR (can be left blank), int
+Spike_species - contaminant species used (can be left blank), string
+Kit - ONT kit used (can be left blank), string
+
+#####
+
+
+##### Read ME for the analysis outputs #####
+
+##### Summary files: #####
+
+For any files containing summary statistics, using df.describe() from pandas library
+https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html
+the output format will be: input column name e.g. "number of reads" followed by a suffix e.g. "number of reads_max"
+col_count = number of rows associated with a groupby e.g. E.coli read number in sample1
+col_mean = mean value for that group
+col_std = standard deviation value for that group
+col_min = min value for that group
+col_max = max value for that group
+col_25% = first quartile value for that group [interquartile range]
+col_50% = median value for that group
+col_75% = third quartile value for that group [interquartile range]
+
+#####
+##### CENTRIFUGE #####
+#####
+
+# This format applies to any file in the /centrifuge/ folder for a given sample ending in "centrifuge_report.tsv"
+# Files containing the word "human" - this is used to identify human reads to be removed
+# Files containing the word "no_host" - this is from the reads classified against the centrifuge database (viral, fungal, bacterial)
+
+##### centrifuge_analysis_for_v_f_b2_no_host_all.csv
+name
+The first column is the name of a genome, or the name corresponding to a taxonomic ID (the second column) at a rank higher than the strain (e.g., Wigglesworthia glossinidia endosymbiont of Glossina brevipalpis).
+taxID
+The second column is the taxonomic ID (e.g., 36870).
+taxRank
+The third column is the taxonomic rank (e.g., leaf).
+genomeSize
+The fourth column is the length of the genome sequence (e.g., 703004).
+numReads
+The fifth column is the number of reads classified to this genomic sequence including multi-classified reads (e.g., 5981).
+numUniqueReads
+The sixth column is the number of reads uniquely classified to this genomic sequence (e.g., 5964).
+abundance
+The seventh column is the proportion of this genome normalized by its genomic length (e.g., 0.0152317).
+totalUniqReads
+df["totalUniqReads"] = sum(df["numUniqueReads"])
+This is the sum of all the unique reads (as counted by the metagenome classifier)
+
+# This format applies to any file in the /centrifuge/ folder for a given sample ending in "centrifuge_troubleshooting_report.tsv"
+# Files containing the word "human" - this is used to identify human reads to be removed
+# Files containing the word "no_host" - this is from the reads classified against the centrifuge database (viral, fungal, bacterial)
+
+##### centrifuge_v_f_b2_describe_meta.csv
+readID
+The first column is the read ID from a raw sequencing read (e.g., 1_1 in the example).
+seqID
+The second column is the sequence ID of the genomic sequence, where the read is classified (e.g., gi|4).
+taxID
+The third column is the taxonomic ID of the genomic sequence in the second column (e.g., 9646).
+score
+The fourth column is the score for the classification, which is the weighted sum of hits (e.g., 4225)
+2ndBestScore
+The fifth column is the score for the next best classification (e.g., 0).
+hitLength
+The sixth column is a pair of two numbers: (1) an approximate number of base pairs of the read that match the genomic sequence and (2) the length of a read or the combined length of mate pairs (e.g., 80 / 80).
+queryLength
+The seventh column is a pair of two numbers: (1) an approximate number of base pairs of the read that match the genomic sequence and (2) the length of a read or the combined length of mate pairs (e.g., 80 / 80). 
+numMatches
+The eighth column is the number of classifications for this read, indicating how many assignments were made (e.g.,1).
+
+# For more information please read centrifuge documentation: https://ccb.jhu.edu/software/centrifuge/manual.shtml
+
+#####
+##### HS-BLASTN #####
+#####
+
+# This format applies to any file in the /blastN/ folder
+# Files containing the word "human" - hsbn_human_host_removed.hsbn.tsv - this is used to identify human reads to be removed
+# Files containing the word "no_host" - no_host_v_f_b2.hs_bn.tsv - this is from the reads classified against the centrifuge database (viral, fungal, bacterial)
+
+# describe_all_predictions.csv - all predictions for a given sample with summary statistics
+# describe_top_ten.csv - top 10 predictions for a given sample with summary statistics
+
+##### describe_v_f_b2_no_host_all_agg.csv
+"qseqid" - the read ID
+"sseqid" - the reference genome ID
+"pident" - percentage of identical matches
+"length" - length of reads being aligned
+"mismatches" - number of mismatches
+"gap_opens" - number of gap openings
+"q_start" - start of alignment in query
+"q_end" - end of alignment in query
+"s_start" - start of alignment in subject
+"s_end" - end of alignment in subject
+"evalue" - The BLAST E-value is the number of expected hits of similar quality (score) that could be found just by chance. 
+E-value of 10 means that up to 10 hits can be expected to be found just by chance, given the same size of a random database. 
+The smaller the E-value, the better the match.
+"bitscore" - The higher the bit-score, the better the sequence similarity.
+The bit-score is the requires size of a sequence database in which the current match could be found just by chance. 
+The bit-score is a log2 scaled and normalized raw-score. 
+Each increase by one doubles the required database size (2bit-score).
+Bit-score does not depend on database size. 
+The bit-score gives the same value for hits in databases of different sizes and hence can be used for searching in an constantly increasing database.
+
+# For column information: https://www.metagenomics.wiki/tools/blast/blastn-output-format-6
+
+# For more information please read centrifuge documentation: https://pubmed.ncbi.nlm.nih.gov/26250111/
+# https://github.com/chenying2016/queries/tree/master/hs-blastn-src
+
+#####
+##### OTHER #####
+#####
+
+b_score (BLAST score) and c_score (centrifuge score) are values I calculated as follows; I would recommend ignoring it.
+def count_reads(row):
+    counter = 0
+    if "numReads" in row and "numUniqueReads" in row:
+        if row["numReads"] > 0:
+            counter += 1
+        if row["numUniqueReads"] > 0:
+            counter += 1
+        if "OCS" in row.index:
+            counter += 2
+
+    if "length_count" in row:
+        if row["length_count"] > 0:
+            counter += 2
+
+    if "max_bitscore" in row:
+        if row["max_bitscore"] > 200:
+            counter += 1
+    if "bitscore_max" in row:
+        if row["bitscore_max"] > 200:
+            counter += 1
+    if "OCS" in row.index:
+        counter += 2
+    return counter

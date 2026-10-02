@@ -1,0 +1,6 @@
+date,NA,strain,concentration_CFU,batch,duration_h,Flowcell_no,Sample_original,Identifier,Barcode,Total_cycles,Spike_species,Kit
+20240216,sDNA,WHO-colab2-10-4-spike-ADV5-bkg,10CFU,51,36,,,S5B1,barcode144,,RSV; REO; EBV1; FeLV; PCV1; ADV5; SMRV; PERV; MVM; Betacorona,
+20240216,sDNA,WHO-colab2-10-5-spike-ADV5-bkg,10CFU,51,36,,,S5B1,barcode144,,RSV; REO; EBV1; FeLV; PCV1; ADV5; SMRV; PERV; MVM; Betacorona,
+20240216,sDNA,WHO-colab2-10-6-spike-ADV5-bkg,10CFU,51,36,,,S5B1,barcode144,,RSV; REO; EBV1; FeLV; PCV1; ADV5; SMRV; PERV; MVM; Betacorona,
+20240216,sDNA,WHO-colab2-10-6-spike-no-ADV5-bkg,10CFU,51,36,,,S5B1,barcode144,,RSV; REO; EBV1; FeLV; PCV1; ADV5; SMRV; PERV; MVM; Betacorona,
+20240216,sDNA,WHO-colab2-medium-ctrl,10CFU,51,36,,,S5B1,barcode144,,RSV; REO; EBV1; FeLV; PCV1; ADV5; SMRV; PERV; MVM; Betacorona,

@@ -1,0 +1,2 @@
+date,NA,strain,concentration_CFU,batch,duration_h,Flowcell_no,Sample_original,Identifier,Barcode,Total_cycles,Spike_species,Kit
+20230119,DNA,advtig-Rep1B-E50,10CFU,41,36,,guppy-demux,,,,Negative control,
